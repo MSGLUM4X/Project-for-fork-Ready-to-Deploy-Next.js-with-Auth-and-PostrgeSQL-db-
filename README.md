@@ -59,10 +59,16 @@ Register OAuth applications for the providers you want to use:
 
 ### 2. Database Setup
 
-* Create a PostgreSQL database and get the connection URL.
+* Create a PostgreSQL database and get the connection URL or create it with 
+prisma : 
+```bash
+npx prisma init --db
+```
+
 * Generate the Prisma client:
 
 ```bash
+npx prisma migrate -dev
 npx prisma generate
 ```
 
