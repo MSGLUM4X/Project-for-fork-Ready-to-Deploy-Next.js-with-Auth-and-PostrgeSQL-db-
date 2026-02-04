@@ -5,32 +5,29 @@ import Link from "next/link";
 import Image from "next/image";
 
 
-enum Error {
-    e403 = "403",
-    e404 = "404"
+enum Upgrade {
+    s1 = "service_1",
+    s2 = "service_2"
 }
 
-const errorMap = {
-    [Error.e403]: (
+const UpgradeMap = {
+    [Upgrade.s1]: (
         <p>
-            You dont have the access.
+            You need to upgrade your authorization to get service 1.
         </p>
     ),
-    [Error.e404]: (
+    [Upgrade.s2]: (
         <p>
-            Page not found.
+            You need to upgrade your authorization to get service 2.
         </p>
     ),
 
 }
 
-/**
- * You can redirect your user here to show specific ui error. You can have all the error you want in the errorMap.
- * Then on the error redirect your user on error with the parameters that match your errors.
- */
-export default function ErrorPage() {
+
+export default function UpgradePage() {
     const search = useSearchParams()
-    const error = search.get("error") as Error
+    const error = search.get("upgrade") as Upgrade
 
 
     return (
@@ -46,11 +43,8 @@ export default function ErrorPage() {
                         <Image src="/icons/home-svgrepo-com.svg" width={20} height={20} alt="Retry Login"/>
                     </Link>
                 </div>
-                <h5 className="mb-2 flex flex-row items-center justify-center gap-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-                    Something went wrong
-                </h5>
                 <div className="font-normal text-gray-700 dark:text-gray-400">
-                    {errorMap[error] || "Please contact us if this error persists."}
+                    {UpgradeMap[error] || "You need to upgrade your account to get allowed to access this service."}
                 </div>
             </div>
         </div>

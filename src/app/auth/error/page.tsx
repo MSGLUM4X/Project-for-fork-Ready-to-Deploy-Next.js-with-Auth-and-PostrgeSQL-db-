@@ -46,7 +46,7 @@ const errorMap = {
 /**
  * You can show here specific message depending on the authentication error that occurred. You will notice that the first callbackUrl is loose now.
  */
-export default function ErrorClient() {
+export default function ErrorAuthPage() {
     const search = useSearchParams()
     const error = search.get("error") as Error
     return (

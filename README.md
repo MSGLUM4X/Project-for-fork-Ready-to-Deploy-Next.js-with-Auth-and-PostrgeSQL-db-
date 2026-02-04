@@ -80,9 +80,9 @@ npx auth secret
 
 ### 4. Access Control
 
-You can classify users using **`ALLOW_EMAIL`** and **`ADMIN_EMAIL`** in your `.env` file.
+You can classify users using **`SERVICE1_EMAIL`** and **`SERVICE2_EMAIL`**  and **`ADMIN_EMAIL`** in your `.env` file.
 
-* Users in `ALLOW_EMAIL` have limited access.
+* Users in `SERVICE1_EMAIL` and `SERVICE2_EMAIL` have limited access.
 * Users in `ADMIN_EMAIL` have admin privileges.
 * A user can belong to both groups or any custom classification you define.
 
@@ -103,7 +103,8 @@ AUTH_GOOGLE_ID=your_google_oauth_client_id
 AUTH_GOOGLE_SECRET=your_google_oauth_client_secret
 
 # Access control
-ALLOW_EMAIL='["email1@example.com","email2@example.com"]'
+SERVICE1_EMAIL='["email1@example.com","email2@example.com"]'
+SERVICE2_EMAIL='["email1@example.com"]'
 ADMIN_EMAIL='["email3@example.com","email2@example.com"]'
 
 # Database

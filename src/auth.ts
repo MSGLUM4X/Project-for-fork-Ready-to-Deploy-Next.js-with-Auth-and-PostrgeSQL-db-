@@ -17,7 +17,8 @@ declare module "next-auth" {
  * userType is used to classify the user depending on their authorisation
  */
 enum userType {
-    allowed = "allowed",
+    service_1 = "service_1",
+    service_2 = "service_2",
     admin = "admin",
 }
 
@@ -25,7 +26,8 @@ enum userType {
  * ALLOW_EMAIL is an env variable where you stock people's email addresses
  * that have the right to connect to your app
  */
-const ALLOW_EMAIL = JSON.parse(process.env.ALLOW_EMAIL ?? "[]") as string[];
+const SERVICE1_EMAIL = JSON.parse(process.env.SERVICE1_EMAIL ?? "[]") as string[];
+const SERVICE2_EMAIL = JSON.parse(process.env.SERVICE2_EMAIL ?? "[]") as string[];
 const ADMIN_EMAIL = JSON.parse(process.env.ADMIN_EMAIL ?? "[]") as string[];
 
 
@@ -40,8 +42,11 @@ const authorization = (email:string, verified:boolean) : userType[] => {
     if (ADMIN_EMAIL.includes(email)){
         access.push(userType.admin)
     }
-    if (ALLOW_EMAIL.includes(email)){
-        access.push(userType.allowed)
+    if (SERVICE1_EMAIL.includes(email)){
+        access.push(userType.service_1)
+    }
+    if (SERVICE2_EMAIL.includes(email)){
+        access.push(userType.service_2)
     }
     return access;
 }
@@ -138,31 +143,46 @@ export const { auth, handlers, signIn, signOut  } = NextAuth({
     ],
     callbacks: {
         authorized({ auth, request: { nextUrl } }){
+            const pathname = nextUrl.pathname;
             const callbackUrl = nextUrl.searchParams.get('callbackUrl') || '/';
             const isLoggedIn = !!auth?.user;
             const authorization : userType[] = auth?.user?.authorization || [];
             const isOnAuth = nextUrl.pathname.startsWith('/auth');
-            const isOnService = nextUrl.pathname.startsWith('/service');
+            const isOnService =  pathname === '/service' ||  nextUrl.pathname.startsWith('/service/')
+            const isOnService2 = pathname === '/service2' || nextUrl.pathname.startsWith('/service2/');
             const isOnAdmin = nextUrl.pathname.startsWith('/admin');
             const isOnError = nextUrl.pathname.startsWith('/error');
-            const pathname = nextUrl.pathname.replace(/\/+$/, "")
-            const isOnRoot = pathname === "";
+            const isOnUpgrade = nextUrl.pathname.startsWith('/upgrade');
+
+            const pathnameRoot = nextUrl.pathname.replace(/\/+$/, "")
+            const isOnRoot = pathnameRoot === "";
 
 
             if (authorization.includes(userType.admin)){
                 return true;
             }
 
-            if (authorization.includes(userType.allowed) ){
+            if (authorization.includes(userType.service_1) ){
                 if (isOnService){
                     return true;
+                }
+                if (isOnService2){
+                    return Response.redirect(new URL("/upgrade?service=service_2", nextUrl));
+                }
+            }
+            if (authorization.includes(userType.service_2) ){
+                if (isOnService2){
+                    return true;
+                }
+                if (isOnService){
+                    return Response.redirect(new URL("/upgrade?service=service_1", nextUrl));
                 }
             }
             if (isOnAuth){
                 if (isLoggedIn) return Response.redirect(new URL(callbackUrl, nextUrl));
                 return true;
             }
-            if (isOnRoot || isOnError){
+            if (isOnRoot || isOnError || isOnUpgrade){
                 return true;
             }
             if (isLoggedIn) {

@@ -8,7 +8,8 @@ const HomePage = () => {
                   {/*
                   For each service you going to create give the good callback to be well redirect.
                   */}
-                <ServiceButton callBackUrl={"callbackUrl=/service"}/>
+                <ServiceButton name="service 1" callBackUrl={"callbackUrl=/service"}/>
+                  <ServiceButton name="service 2" callBackUrl={"callbackUrl=/service2"}/>
               </div>
             </div>
       </div>

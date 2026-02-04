@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const ServiceButton = (props:{callBackUrl:string}) => {
+const ServiceButton = (props:{callBackUrl:string, name:string}) => {
 
     return (
         <Link
@@ -9,7 +9,7 @@ const ServiceButton = (props:{callBackUrl:string}) => {
         >
             <div className='flex-1 flex items-center justify-center'>
                 <div className={`transition-all duration-300  font-bold font-mono text-lg`}>
-                    In coming
+                    <p>{props.name}</p>
                 </div>
             </div>
 
